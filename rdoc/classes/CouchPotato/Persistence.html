@@ -1,0 +1,456 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>Module: CouchPotato::Persistence [Couch Potato]</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Script-Type" content="text/javascript" />
+  <link rel="stylesheet" href="../.././rdoc-style.css" type="text/css" media="screen" />
+  <script type="text/javascript">
+  // <![CDATA[
+
+  function popupCode( url ) {
+    window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+  }
+
+  function toggleCode( id ) {
+    if ( document.getElementById )
+      elem = document.getElementById( id );
+    else if ( document.all )
+      elem = eval( "document.all." + id );
+    else
+      return false;
+
+    elemStyle = elem.style;
+
+    if ( elemStyle.display != "block" ) {
+      elemStyle.display = "block"
+    } else {
+      elemStyle.display = "none"
+    }
+
+    return true;
+  }
+
+  // Make codeblocks hidden by default
+  document.writeln( "<style type=\"text/css\">div.method-source-code { display: none }<\/style>" )
+
+  // ]]>
+  </script>
+
+</head>
+<body>
+
+
+    <div id="classHeader">
+        <table class="header-table">
+        <tr class="top-aligned-row">
+          <td><strong>Module</strong></td>
+          <td class="class-name-in-header">CouchPotato::Persistence</td>
+        </tr>
+        <tr class="top-aligned-row">
+            <td><strong>In:</strong></td>
+            <td>
+
+
+                <a href="../../files/lib/couch_potato/persistence/belongs_to_property_rb.html">
+
+                lib/couch_potato/persistence/belongs_to_property.rb
+
+                </a>
+
+
+        <br />
+
+
+                <a href="../../files/lib/couch_potato/persistence/callbacks_rb.html">
+
+                lib/couch_potato/persistence/callbacks.rb
+
+                </a>
+
+
+        <br />
+
+
+                <a href="../../files/lib/couch_potato/persistence/dirty_attributes_rb.html">
+
+                lib/couch_potato/persistence/dirty_attributes.rb
+
+                </a>
+
+
+        <br />
+
+
+                <a href="../../files/lib/couch_potato/persistence/json_rb.html">
+
+                lib/couch_potato/persistence/json.rb
+
+                </a>
+
+
+        <br />
+
+
+                <a href="../../files/lib/couch_potato/persistence/properties_rb.html">
+
+                lib/couch_potato/persistence/properties.rb
+
+                </a>
+
+
+        <br />
+
+
+                <a href="../../files/lib/couch_potato/persistence/simple_property_rb.html">
+
+                lib/couch_potato/persistence/simple_property.rb
+
+                </a>
+
+
+        <br />
+
+
+                <a href="../../files/lib/couch_potato/persistence_rb.html">
+
+                lib/couch_potato/persistence.rb
+
+                </a>
+
+
+        <br />
+
+            </td>
+        </tr>
+
+
+        </table>
+    </div>
+  <!-- banner header -->
+
+  <div id="bodyContent">
+
+  <div id="contextContent">
+
+   </div>
+
+
+    <div id="method-list">
+      <h3 class="section-bar">Methods</h3>
+
+      <div class="name-list">
+
+        <a href="#M000006">attributes</a>&nbsp;&nbsp;
+
+        <a href="#M000005">attributes=</a>&nbsp;&nbsp;
+
+        <a href="#M000003">included</a>&nbsp;&nbsp;
+
+        <a href="#M000004">new</a>&nbsp;&nbsp;
+
+        <a href="#M000007">new?</a>&nbsp;&nbsp;
+
+        <a href="#M000008">to_param</a>&nbsp;&nbsp;
+
+      </div>
+    </div>
+
+  </div>
+
+    <!-- if includes -->
+
+    <div id="section">
+
+    <div id="class-list">
+      <h3 class="section-bar">Classes and Modules</h3>
+
+      Module <a href="Persistence/Callbacks.html" class="link">CouchPotato::Persistence::Callbacks</a><br />
+Module <a href="Persistence/DirtyAttributes.html" class="link">CouchPotato::Persistence::DirtyAttributes</a><br />
+Module <a href="Persistence/Json.html" class="link">CouchPotato::Persistence::Json</a><br />
+Module <a href="Persistence/Properties.html" class="link">CouchPotato::Persistence::Properties</a><br />
+
+    </div>
+
+
+
+
+    <!-- if method_list -->
+
+    <div id="methods">
+
+      <h3 class="section-bar">Public Class methods</h3>
+
+
+      <div id="method-M000003" class="method-detail">
+        <a name="M000003"></a>
+
+        <div class="method-heading">
+
+          <a href="#M000003" class="method-signature">
+
+          <span class="method-name">included</span><span class="method-args">(base)</span>
+
+          </a>
+
+        </div>
+
+        <div class="method-description">
+
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000003-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000003-source">
+<pre>
+    <span class="ruby-comment cmt"># File lib/couch_potato/persistence.rb, line 15</span>
+15:     <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">included</span>(<span class="ruby-identifier">base</span>)
+16:       <span class="ruby-identifier">base</span>.<span class="ruby-identifier">send</span> <span class="ruby-identifier">:include</span>, <span class="ruby-constant">Properties</span>, <span class="ruby-constant">Callbacks</span>, <span class="ruby-constant">Validatable</span>, <span class="ruby-constant">Json</span>, <span class="ruby-constant">CouchPotato</span><span class="ruby-operator">::</span><span class="ruby-constant">View</span><span class="ruby-operator">::</span><span class="ruby-constant">CustomViews</span>
+17:       <span class="ruby-identifier">base</span>.<span class="ruby-identifier">send</span> <span class="ruby-identifier">:include</span>, <span class="ruby-constant">DirtyAttributes</span>
+18:       <span class="ruby-identifier">base</span>.<span class="ruby-identifier">send</span> <span class="ruby-identifier">:include</span>, <span class="ruby-constant">MagicTimestamps</span>
+19:       <span class="ruby-identifier">base</span>.<span class="ruby-identifier">class_eval</span> <span class="ruby-keyword kw">do</span>
+20:         <span class="ruby-identifier">attr_accessor</span> <span class="ruby-identifier">:_id</span>, <span class="ruby-identifier">:_rev</span>, <span class="ruby-identifier">:_attachments</span>, <span class="ruby-identifier">:_deleted</span>
+21:         <span class="ruby-identifier">alias_method</span> <span class="ruby-identifier">:id</span>, <span class="ruby-identifier">:_id</span>
+22:       <span class="ruby-keyword kw">end</span>
+23:     <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+
+        </div>
+      </div>
+
+
+      <div id="method-M000004" class="method-detail">
+        <a name="M000004"></a>
+
+        <div class="method-heading">
+
+          <a href="#M000004" class="method-signature">
+
+          <span class="method-name">new</span><span class="method-args">(attributes = {})</span>
+
+          </a>
+
+        </div>
+
+        <div class="method-description">
+
+          <p>
+initialize a new instance of the model optionally passing it a hash of
+attributes. the attributes have to be declared using the property method
+</p>
+<p>
+example:
+</p>
+<pre>
+  class Book
+    include CouchPotato::Persistence
+    property :title
+  end
+  book = Book.new :title =&gt; 'Time to Relax'
+  book.title # =&gt; 'Time to Relax'
+</pre>
+
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000004-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000004-source">
+<pre>
+    <span class="ruby-comment cmt"># File lib/couch_potato/persistence.rb, line 35</span>
+35:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">attributes</span> = {})
+36:       <span class="ruby-identifier">attributes</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">name</span>, <span class="ruby-identifier">value</span><span class="ruby-operator">|</span>
+37:         <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">send</span>(<span class="ruby-node">&quot;#{name}=&quot;</span>, <span class="ruby-identifier">value</span>)
+38:       <span class="ruby-keyword kw">end</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">attributes</span>
+39:     <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+
+        </div>
+      </div>
+
+
+      <h3 class="section-bar">Public Instance methods</h3>
+
+
+      <div id="method-M000006" class="method-detail">
+        <a name="M000006"></a>
+
+        <div class="method-heading">
+
+          <a href="#M000006" class="method-signature">
+
+          <span class="method-name">attributes</span><span class="method-args">()</span>
+
+          </a>
+
+        </div>
+
+        <div class="method-description">
+
+          <p>
+returns all of a model&#8217;s attributes that have been defined using the
+property method as a Hash
+</p>
+<p>
+example:
+</p>
+<pre>
+  class Book
+    include CouchPotato::Persistence
+    property :title
+    property :year
+  end
+  book = Book.new :year =&gt; 2009
+  book.attributes # =&gt; {:title =&gt; nil, :year =&gt; 2009}
+</pre>
+
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000006-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000006-source">
+<pre>
+    <span class="ruby-comment cmt"># File lib/couch_potato/persistence.rb, line 70</span>
+70:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">attributes</span>
+71:       <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">properties</span>.<span class="ruby-identifier">inject</span>({}) <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">res</span>, <span class="ruby-identifier">property</span><span class="ruby-operator">|</span>
+72:         <span class="ruby-identifier">property</span>.<span class="ruby-identifier">serialize</span>(<span class="ruby-identifier">res</span>, <span class="ruby-keyword kw">self</span>)
+73:         <span class="ruby-identifier">res</span>
+74:       <span class="ruby-keyword kw">end</span>
+75:     <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+
+        </div>
+      </div>
+
+
+      <div id="method-M000005" class="method-detail">
+        <a name="M000005"></a>
+
+        <div class="method-heading">
+
+          <a href="#M000005" class="method-signature">
+
+          <span class="method-name">attributes=</span><span class="method-args">(hash)</span>
+
+          </a>
+
+        </div>
+
+        <div class="method-description">
+
+          <p>
+assign multiple attributes at once. the attributes have to be declared
+using the property method
+</p>
+<p>
+example:
+</p>
+<pre>
+  class Book
+    include CouchPotato::Persistence
+    property :title
+    property :year
+  end
+  book = Book.new
+  book.attributes = {:title =&gt; 'Time to Relax', :year =&gt; 2009}
+  book.title # =&gt; 'Time to Relax'
+  book.year # =&gt; 2009
+</pre>
+
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000005-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000005-source">
+<pre>
+    <span class="ruby-comment cmt"># File lib/couch_potato/persistence.rb, line 54</span>
+54:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">attributes=</span>(<span class="ruby-identifier">hash</span>)
+55:       <span class="ruby-identifier">hash</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">attribute</span>, <span class="ruby-identifier">value</span><span class="ruby-operator">|</span>
+56:         <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">send</span> <span class="ruby-node">&quot;#{attribute}=&quot;</span>, <span class="ruby-identifier">value</span>
+57:       <span class="ruby-keyword kw">end</span>
+58:     <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+
+        </div>
+      </div>
+
+
+      <div id="method-M000007" class="method-detail">
+        <a name="M000007"></a>
+
+        <div class="method-heading">
+
+          <a href="#M000007" class="method-signature">
+
+          <span class="method-name">new?</span><span class="method-args">()</span>
+
+          </a>
+
+        </div>
+
+        <div class="method-description">
+
+          <p>
+returns true if a model hasn&#8217;t been saved yet, false otherwise
+</p>
+
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000007-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000007-source">
+<pre>
+    <span class="ruby-comment cmt"># File lib/couch_potato/persistence.rb, line 78</span>
+78:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">new?</span>
+79:       <span class="ruby-identifier">_rev</span>.<span class="ruby-identifier">nil?</span>
+80:     <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+
+        </div>
+      </div>
+
+
+      <div id="method-M000008" class="method-detail">
+        <a name="M000008"></a>
+
+        <div class="method-heading">
+
+          <a href="#M000008" class="method-signature">
+
+          <span class="method-name">to_param</span><span class="method-args">()</span>
+
+          </a>
+
+        </div>
+
+        <div class="method-description">
+
+          <p>
+returns the document id this is used by rails to construct URLs can be
+overridden to for example use slugs for URLs instead if ids
+</p>
+
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000008-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000008-source">
+<pre>
+    <span class="ruby-comment cmt"># File lib/couch_potato/persistence.rb, line 85</span>
+85:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">to_param</span>
+86:       <span class="ruby-identifier">_id</span>
+87:     <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+
+        </div>
+      </div>
+
+
+
+    </div>
+
+
+
+
+  </div>
+
+<div id="validator-badges">
+  <p><small><a href="http://validator.w3.org/check/referer">[Validate]</a></small></p>
+</div>
+
+</body>
+</html>

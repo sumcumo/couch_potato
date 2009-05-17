@@ -1,0 +1,506 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>File: README.md [Couch Potato]</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Script-Type" content="text/javascript" />
+  <link rel="stylesheet" href=".././rdoc-style.css" type="text/css" media="screen" />
+  <script type="text/javascript">
+  // <![CDATA[
+
+  function popupCode( url ) {
+    window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+  }
+
+  function toggleCode( id ) {
+    if ( document.getElementById )
+      elem = document.getElementById( id );
+    else if ( document.all )
+      elem = eval( "document.all." + id );
+    else
+      return false;
+
+    elemStyle = elem.style;
+
+    if ( elemStyle.display != "block" ) {
+      elemStyle.display = "block"
+    } else {
+      elemStyle.display = "none"
+    }
+
+    return true;
+  }
+
+  // Make codeblocks hidden by default
+  document.writeln( "<style type=\"text/css\">div.method-source-code { display: none }<\/style>" )
+
+  // ]]>
+  </script>
+
+</head>
+<body>
+
+
+  <div id="fileHeader">
+    <h1>README.md</h1>
+    <table class="header-table">
+    <tr class="top-aligned-row">
+      <td><strong>Path:</strong></td>
+      <td>README.md
+
+      </td>
+    </tr>
+    <tr class="top-aligned-row">
+      <td><strong>Last Update:</strong></td>
+      <td>2009-05-14 13:26:29 +0200</td>
+    </tr>
+    </table>
+  </div>
+  <!-- banner header -->
+
+  <div id="bodyContent">
+
+  <div id="contextContent">
+
+    <div id="description">
+      <p>
+## Couch Potato
+</p>
+<p>
+&#8230; is a persistence layer written in ruby for CouchDB.
+</p>
+<p>
+### Mission
+</p>
+<p>
+The goal of Couch Potato is to create a minimal framework in order to store
+and retrieve Ruby objects to/from CouchDB and create and query views.
+</p>
+<p>
+It follows the document/view/querying semantics established by CouchDB and
+won&#8217;t try to mimic ActiveRecord behavior in any way as that IS BAD.
+</p>
+<p>
+Code that uses Couch Potato should be easy to test.
+</p>
+<p>
+Lastly Couch Potato aims to provide a seamless integration with Ruby on
+Rails, e.g. routing, form helpers etc.
+</p>
+<p>
+### Core Features
+</p>
+<ul>
+<li>persisting objects by including the <a
+href="../classes/CouchPotato/Persistence.html">CouchPotato::Persistence</a>
+module
+
+</li>
+<li>declarative views with either custom or generated map/reduce functions
+
+</li>
+<li>extensive spec suite
+
+</li>
+</ul>
+<p>
+### Installation
+</p>
+<p>
+Couch Potato requires Ruby 1.9.
+</p>
+<p>
+Couch Potato is hosted as a gem on github which you can install like this:
+</p>
+<pre>
+    sudo gem source --add http://gems.github.com # if you haven't already
+    sudo gem install langalex-couch_potato
+</pre>
+<p>
+#### Using with your ruby application:
+</p>
+<pre>
+    require 'rubygems'
+    gem 'langalex-couch_potato'
+    require 'couch_potato'
+    CouchPotato::Config.database_name = 'name of the db'
+</pre>
+<p>
+Alternatively you can download or clone the source repository and then
+require lib/couch_potato.rb.
+</p>
+<p>
+#### Using with Rails
+</p>
+<p>
+Add to your config/environment.rb:
+</p>
+<pre>
+    config.gem 'langalex-couch_potato', :lib =&gt; 'couch_potato', :source =&gt; 'http://gems.github.com'
+</pre>
+<p>
+Then create a config/couchdb.yml:
+</p>
+<pre>
+    development: development_db_name
+    test: test_db_name
+    production: http://db.server/production_db_name
+</pre>
+<p>
+Alternatively you can also install Couch Potato directly as a plugin.
+</p>
+<p>
+### Introduction
+</p>
+<p>
+This is a basic tutorial on how to use Couch Potato. If you want to know
+all the details feel free to read the specs.
+</p>
+<p>
+#### Save, load objects
+</p>
+<p>
+First you need a class.
+</p>
+<pre>
+    class User
+    end
+</pre>
+<p>
+To make instances of this class persistent include the persistence module:
+</p>
+<pre>
+    class User
+      include CouchPotato::Persistence
+    end
+</pre>
+<p>
+If you want to store any properties you have to declare them:
+</p>
+<pre>
+    class User
+      include CouchPotato::Persistence
+
+      property :name
+    end
+</pre>
+<p>
+Properties can be of any type:
+</p>
+<pre>
+    class User
+      include CouchPotato::Persistence
+
+      property :address, :type =&gt; Address
+    end
+</pre>
+<p>
+Now you can save your objects. All database operations are encapsulated in
+the <a
+href="../classes/CouchPotato/Database.html">CouchPotato::Database</a>
+class. This separates your domain logic from the database access logic
+which makes it easier to write tests and also keeps you models smaller and
+cleaner.
+</p>
+<pre>
+    user = User.new :name =&gt; 'joe'
+    CouchPotato.database.save_document user # or save_document!
+</pre>
+<p>
+You can of course also retrieve your instance:
+</p>
+<pre>
+    CouchPotato.database.load_document &quot;id_of_the_user_document&quot; # =&gt; &lt;#User 0x3075&gt;
+</pre>
+<p>
+#### Properties
+</p>
+<p>
+You can access the properties you declared above through normal attribute
+accessors.
+</p>
+<pre>
+    user.name # =&gt; 'joe'
+    user.name = {:first =&gt; ['joe', 'joey'], :last =&gt; 'doe', :middle =&gt; 'J'} # you can set any ruby object that responds_to :to_json (includes all core objects)
+    user._id # =&gt; &quot;02097f33a0046123f1ebc0ebb6937269&quot;
+    user._rev # =&gt; &quot;2769180384&quot;
+    user.created_at # =&gt; Fri Oct 24 19:05:54 +0200 2008
+    user.updated_at # =&gt; Fri Oct 24 19:05:54 +0200 2008
+    user.new? # =&gt; false
+</pre>
+<p>
+If you want to have properties that don&#8217;t map to any JSON type, i.e.
+other than String, Number, Boolean, Hash or Array you have to define the
+type like this:
+</p>
+<pre>
+    class User
+      property :date_of_birth, :type =&gt; Date
+    end
+</pre>
+<p>
+The date_of_birth property is now automatically serialized to JSON and back
+when storing/retrieving objects.
+</p>
+<p>
+#### Dirty tracking
+</p>
+<p>
+<a href="../classes/CouchPotato.html">CouchPotato</a> tracks the dirty
+state of attributes in the same way ActiveRecord does:
+</p>
+<pre>
+    user = User.create :name =&gt; 'joe'
+    user.name # =&gt; 'joe'
+    user.name_changed? # =&gt; false
+    user.name_was # =&gt; nil
+</pre>
+<p>
+You can also force a dirty state:
+</p>
+<pre>
+    user.name = 'jane'
+    user.name_changed? # =&gt; true
+    user.name_not_changed
+    user.name_changed? # =&gt; false
+    CouchPotato.database.save_document user # does nothing as no attributes are dirty
+</pre>
+<p>
+#### Object validations
+</p>
+<p>
+Couch Potato uses the validatable library for vaidation (<a
+href="http://validatable.rubyforge.org/">validatable.rubyforge.org/</a>)\
+</p>
+<pre>
+    class User
+      property :name
+      validates_presence_of :name
+    end
+
+    user = User.new
+    user.valid? # =&gt; false
+    user.errors.on(:name) # =&gt; [:name, 'can't be blank']
+</pre>
+<p>
+#### Finding stuff
+</p>
+<p>
+In order to find data in your CouchDB you have to create a view first.
+Couch Potato offers you to create and manage those views for you. All you
+have to do is declare them in your classes:
+</p>
+<pre>
+    class User
+      include CouchPotato::Persistence
+      property :name
+
+      view :all, :key =&gt; :created_at
+    end
+</pre>
+<p>
+This will create a view called &#8220;all&#8221; in the &#8220;user&#8221;
+design document with a map function that emits &#8220;created_at&#8220; for
+every user document.
+</p>
+<pre>
+    CouchPotato.database.view User.all
+</pre>
+<p>
+This will load all user documents in your database sorted by created_at.
+</p>
+<pre>
+    CouchPotato.database.view User.all(:key =&gt; (Time.now- 10)..(Time.now), :descending =&gt; true)
+</pre>
+<p>
+Any options you pass in will be passed onto CouchDB.
+</p>
+<p>
+Composite keys are also possible:
+</p>
+<pre>
+    class User
+      property :name
+
+      view :all, :key =&gt; [:created_at, :name]
+    end
+</pre>
+<p>
+The creation of views is based on view specification classes (see the <a
+href="../classes/CouchPotato/View.html">CouchPotato::View</a>) module. The
+above code used the ModelViewSpec class which is used to the simple find
+model by property searches. For more sophisticated searches you can use
+other view specifications (either use the built-in or provide your own) by
+passing a type parameter:
+</p>
+<p>
+If you have larger structures and you only want to load some attributes you
+can customize the view you can use the PropertiesViewSpec (the full class
+name is automatically derived):
+</p>
+<pre>
+    class User
+      property :name
+      property :bio
+
+      view :all, :key =&gt; :created_at, :properties =&gt; [:name], :type =&gt; :properties
+    end
+
+  CouchPotato.database.view(User.everyone).first.name # =&gt; &quot;joe&quot;
+  CouchPotato.database.view(User.everyone).first.bio # =&gt; nil
+</pre>
+<p>
+You can also pass in custom map/reduce functions with the custom view spec:
+</p>
+<pre>
+    class User
+      view :all, :map =&gt; &quot;function(doc) { emit(doc.created_at, null)}&quot;, :include_docs =&gt; true, :type =&gt; :custom
+    end
+</pre>
+<p>
+If you don&#8217;t want the results to be converted into models the raw
+view is your friend:
+</p>
+<pre>
+    class User
+      view :all, :map =&gt; &quot;function(doc) { emit(doc.created_at, doc.name)}&quot;, :type =&gt; :raw
+    end
+</pre>
+<p>
+When querying this view you will get the raw data returned by CouchDB which
+looks something like this: {&#8216;total_entries&#8217;: 2,
+&#8216;rows&#8217;: [{&#8216;value&#8217;: &#8216;alex&#8217;,
+&#8216;key&#8217;: &#8216;2009-01-03 00:02:34 +000&#8217;,
+&#8216;id&#8217;: &#8216;75976rgi7546gi02a&#8217;}]}
+</p>
+<p>
+To process this raw data you can also pass in a results filter:
+</p>
+<pre>
+    class User
+      view :all, :map =&gt; &quot;function(doc) { emit(doc.created_at, doc.name)}&quot;, :type =&gt; :raw, :results_filter =&gt; lambda {|results| results['rows'].map{|row| row['value']}}
+    end
+</pre>
+<p>
+In this case querying the view would only return the emitted value for each
+row.
+</p>
+<p>
+#### Associations
+</p>
+<p>
+Not supported. Not sure if they ever will be. You can implement those
+yourself using views and custom methods on your models.
+</p>
+<p>
+#### Callbacks
+</p>
+<p>
+Couch Potato supports the usual lifecycle callbacks known from
+ActiveRecord:
+</p>
+<pre>
+    class User
+      include CouchPotato::Persistence
+
+      before_create :do_something_before_create
+      before_update {|user, db| user.do_something_on_update}
+    end
+</pre>
+<p>
+This will call the method do_something_before_create before creating an
+object and run the given lambda before updating one. Lambda callbacks get
+passed the model as their first argument. Optionally if a lambda declares
+two arguments it also gets passed the database object. This is useful for
+creating other objects or querying views. Method callbacks don&#8217;t
+receive any arguments by default but will get passed the database if they
+declare an argument.
+</p>
+<p>
+Supported callbacks are: :before_validation_on_create,
+:before_validation_on_update, :before_validation_on_save, :before_create,
+:after_create, :before_update, :after_update, :before_save, :after_save,
+:before_destroy, :after_destroy.
+</p>
+<p>
+#### Testing
+</p>
+<p>
+To make testing easier and faster database logic has been put into its own
+class, which you can replace and stub out in whatever way you want:
+</p>
+<pre>
+    class User
+      include CouchPotato::Persistence
+    end
+
+    # RSpec
+    describe 'save a user' do
+      it 'should save' do
+        couchrest_db = stub 'couchrest_db',
+        database = CouchPotato::Database.new couchrest_db
+        user = User.new
+        couchrest_db.should_receive(:save_doc).with(...)
+        database.save_document user
+      end
+    end
+</pre>
+<p>
+By creating you own instances of <a
+href="../classes/CouchPotato/Database.html">CouchPotato::Database</a> and
+passing them a fake CouchRest database instance you can completely
+disconnect your unit tests/spec from the database.
+</p>
+<p>
+### Helping out
+</p>
+<p>
+Please fix bugs, add more specs, implement new features by forking the
+github repo at <a
+href="http://github.com/langalex/couch_potato.">github.com/langalex/couch_potato.</a>
+</p>
+<p>
+You can run all the specs by calling &#8216;rake spec_unit&#8217; and
+&#8216;rake spec_functional&#8217; in the root folder of Couch Potato. The
+specs require a running CouchDB instance at <a
+href="http://localhost:5984">localhost:5984</a>
+</p>
+<p>
+I will only accept patches that are covered by specs - sorry.
+</p>
+<p>
+### Contact
+</p>
+<p>
+If you have any questions/suggestions etc. please contact me at alex at
+upstream-berlin.com or @langalex on twitter.
+</p>
+
+    </div>
+
+   </div>
+
+
+  </div>
+
+    <!-- if includes -->
+
+    <div id="section">
+
+
+
+
+    <!-- if method_list -->
+
+
+
+
+  </div>
+
+<div id="validator-badges">
+  <p><small><a href="http://validator.w3.org/check/referer">[Validate]</a></small></p>
+</div>
+
+</body>
+</html>
